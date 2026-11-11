@@ -1,45 +1,42 @@
-const num1Input = document.getElementById('num1');
-const num2Input = document.getElementById('num2');
-const resultWindow = document.getElementById('result');
+const resultBox = document.getElementById('result');
+const plusBtn = document.getElementById('plus-btn');
+const minusBtn = document.getElementById('minus-btn');
+const messageBox = document.getElementById('message');
 
-function getNumbers() {
-    const val1 = num1Input.value.trim();
-    const val2 = num2Input.value.trim();
+let count = 0;
 
-    if (val1 === '' || val2 === '' || isNaN(Number(val1)) || isNaN(Number(val2))) {
-        resultWindow.textContent = 'Ошибка: введите корректные числа';
-        resultWindow.style.color = 'red';
-        return null;
+function updateUI() {
+    resultBox.textContent = count;
+
+    resultBox.classList.remove('red', 'yellow', 'green');
+    if (count > 0) {
+        resultBox.classList.add('yellow');
+    } else if (count < 0) {
+        resultBox.classList.add('green');
+    } else {
+        resultBox.classList.add('red');
     }
 
-    resultWindow.style.color = '#333';
-    return [Number(val1), Number(val2)];
+    plusBtn.disabled = (count >= 10);
+    minusBtn.disabled = (count <= -10);
+
+    if (count === 10 || count === -10) {
+        messageBox.textContent = 'Вы достигли экстремального значения';
+    } else {
+        messageBox.textContent = '';
+    }
 }
 
-function sum(a, b) { return a + b; }
-function subtract(a, b) { return a - b; }
-function multiply(a, b) { return a * b; }
-function divide(a, b) {
-    if (b === 0) return 'Ошибка: деление на ноль';
-    return a / b;
-}
-
-document.getElementById('btn-sum').addEventListener('click', () => {
-    const nums = getNumbers();
-    if (nums) resultWindow.textContent = sum(nums[0], nums[1]);
+plusBtn.addEventListener('click', () => {
+    if (count < 10) {
+        count++;
+        updateUI();
+    }
 });
 
-document.getElementById('btn-sub').addEventListener('click', () => {
-    const nums = getNumbers();
-    if (nums) resultWindow.textContent = subtract(nums[0], nums[1]);
-});
-
-document.getElementById('btn-mul').addEventListener('click', () => {
-    const nums = getNumbers();
-    if (nums) resultWindow.textContent = multiply(nums[0], nums[1]);
-});
-
-document.getElementById('btn-div').addEventListener('click', () => {
-    const nums = getNumbers();
-    if (nums) resultWindow.textContent = divide(nums[0], nums[1]);
+minusBtn.addEventListener('click', () => {
+    if (count > -10) {
+        count--;
+        updateUI();
+    }
 });
